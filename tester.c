@@ -12,6 +12,7 @@
  * 
  * In addition, we will always consider that severals instances of a 
  * tracee (with a same name) is always the same.
+ *
  */
 
 #include <stdio.h>
@@ -36,7 +37,7 @@ int main(int argc, char *argv[]){
     }
     name = argv[1];
 
-    // 1. Get the number of pages of a process or several process(es) with a given name.
+    // 1. Get the number of pages (TOTAL #of pages) of a process or several process(es) with a given name.
     long nb_pages = syscall(385, name, strlen(name));
     if (nb_pages <= 0){
         fprintf(stderr, "[ERROR] The given process(es) do(es) not have any pages or do(es) not exist\n");
@@ -51,6 +52,7 @@ int main(int argc, char *argv[]){
     }
 
     // 2. Get the bitmap initialized by the kernel to have only read-only and present pages.
+    // Note that a page with the 'r-xp' permission is also a read-only page.
     n = syscall(386, bitmap, name , strlen(name));
     if (n < 0){
         free(bitmap);
